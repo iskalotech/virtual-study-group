@@ -8,10 +8,10 @@ import { Navbar } from '@/components/navbar'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Virtual Study Group | Study anytime, anywhere',
   description: 'A platform for online collaborative learning among students and peers.',
-} satisfies Metadata
+}
 
 export default function RootLayout({
   children,
