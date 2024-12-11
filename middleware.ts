@@ -1,26 +1,25 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const authPages = ['/sign-in', '/sign-up'];
-  const isAuthPage = authPages.includes(request.nextUrl.pathname);
-  const token = request.cookies.get('auth-token');
+  const authCookie = request.cookies.get('auth')
+  const path = request.nextUrl.pathname
 
-  if (isAuthPage && token) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  // Protected routes
+  if (path.startsWith('/dashboard')) {
+    if (!authCookie) {
+      return NextResponse.redirect(new URL('/sign-in', request.url))
+    }
   }
 
-  if (!isAuthPage && !token) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
+  // Auth routes (when already logged in)
+  if ((path === '/sign-in' || path === '/sign-up') && authCookie) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
-  return NextResponse.next();
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/sign-in',
-    '/sign-up',
-  ],
-};
+  matcher: ['/dashboard/:path*', '/sign-in', '/sign-up']
+}

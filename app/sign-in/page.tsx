@@ -41,10 +41,12 @@ export default function SignIn() {
   };
 
   const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        router.push("/dashboard");
+      }
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       toast({

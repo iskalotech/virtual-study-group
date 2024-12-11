@@ -20,7 +20,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex fixed w-full">
+    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex fixed w-full z-100">
       <div className="container flex h-16 items-center px-4">
         <Link href="/" className="flex items-center space-x-2">
           <GraduationCap className="h-6 w-6" />
