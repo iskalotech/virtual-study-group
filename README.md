@@ -115,7 +115,6 @@ virtual-study-group/
 ├── lib/                    # Utility functions and configurations
 ├── prisma/                # Database schema and migrations
 ├── public/                # Static files
-└── styles/                # Global styles
 ```
 
 ## Contributing
