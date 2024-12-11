@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  firebaseUid   String    @unique
+  email         String    @unique
+  name          String
+  imageUrl      String?
+  bio           String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  studyGroups   StudyGroupMember[]
+  ownedGroups   StudyGroup[]
+  messages      Message[]
+}
+
+model StudyGroup {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?
+  ownerId     String
+  owner       User      @relation(fields: [ownerId], references: [id])
+  members     StudyGroupMember[]
+  messages    Message[]
+  resources   Resource[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model StudyGroupMember {
+  id          String     @id @default(cuid())
+  userId      String
+  groupId     String
+  role        String     @default("member")
+  user        User       @relation(fields: [userId], references: [id])
+  group       StudyGroup @relation(fields: [groupId], references: [id])
+  joinedAt    DateTime   @default(now())
+
+  @@unique([userId, groupId])
+}
+
+model Message {
+  id          String     @id @default(cuid())
+  content     String
+  userId      String
+  groupId     String
+  user        User       @relation(fields: [userId], references: [id])
+  group       StudyGroup @relation(fields: [groupId], references: [id])
+  createdAt   DateTime   @default(now())
+}
+
+model Resource {
+  id          String     @id @default(cuid())
+  name        String
+  type        String
+  url         String
+  groupId     String
+  group       StudyGroup @relation(fields: [groupId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
