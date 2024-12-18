@@ -27,8 +27,28 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const idToken = await userCredential.user.getIdToken();
+
+      // Send ID token to backend to set the auth cookie
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (response.ok) {
+        router.push("/dashboard");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to authenticate");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -45,7 +65,23 @@ export default function SignIn() {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       if (result.user) {
-        router.push("/dashboard");
+        const idToken = await result.user.getIdToken(); // Retrieve Firebase ID token
+
+        // Send ID token to backend to set the auth cookie
+        const response = await fetch("/api/auth", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ idToken }),
+        });
+
+        if (response.ok) {
+          router.push("/dashboard");
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to authenticate");
+        }
       }
     } catch (error: any) {
       console.error("Google sign-in error:", error);
@@ -93,7 +129,7 @@ export default function SignIn() {
           </Button>
 
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/sign-up" className="text-primary hover:underline">
               Sign up
             </Link>

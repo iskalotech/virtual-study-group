@@ -1,5 +1,7 @@
 # Virtual Study Group
 
+![Hero Banner](/public/vsg_banner.png)
+
 Virtual Study Group is an innovative web application designed to enhance collaborative learning among students. It provides a comprehensive platform for organizing and participating in virtual study sessions, complete with real-time collaboration tools and resource sharing capabilities.
 
 ## Features

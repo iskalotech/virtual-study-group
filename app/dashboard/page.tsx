@@ -1,14 +1,30 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/components/providers/auth-provider';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { FooterLarge } from '@/components/footer/footer-large';
-import { Plus, Users, BookOpen, Calendar } from 'lucide-react';
-import Link from 'next/link';
+import { useAuth } from "@/components/providers/auth-provider";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { FooterLarge } from "@/components/footer/footer-large";
+import { Plus, Users, BookOpen, Calendar } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading...</p> {/* Replace with your custom loading component */}
+      </div>
+    );
+  }
+
+  if (!user) {
+    // Redirect user to the login page if they are not authenticated
+    router.push("/sign-in");
+    return null; // Don't render the rest of the page if the user is not authenticated
+  }
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
@@ -21,7 +37,7 @@ export default function Dashboard() {
             </div>
             <p className="text-2xl font-bold mt-2">3</p>
           </Card>
-          
+
           <Card className="p-6">
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-muted-foreground" />
@@ -29,7 +45,7 @@ export default function Dashboard() {
             </div>
             <p className="text-2xl font-bold mt-2">2</p>
           </Card>
-          
+
           <Card className="p-6">
             <div className="flex items-center space-x-2">
               <BookOpen className="h-5 w-5 text-muted-foreground" />
@@ -37,12 +53,14 @@ export default function Dashboard() {
             </div>
             <p className="text-2xl font-bold mt-2">24</p>
           </Card>
-          
+
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <h3 className="text-sm font-medium">Create Group</h3>
-                <p className="text-sm text-muted-foreground">Start a new study group</p>
+                <p className="text-sm text-muted-foreground">
+                  Start a new study group
+                </p>
               </div>
               <Button size="icon">
                 <Plus className="h-4 w-4" />
@@ -55,7 +73,9 @@ export default function Dashboard() {
           <Card className="p-6">
             <h2 className="text-lg font-semibold mb-4">Your Study Groups</h2>
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">No study groups yet.</p>
+              <p className="text-sm text-muted-foreground">
+                No study groups yet.
+              </p>
               <Button asChild>
                 <Link href="/groups/create">Create Your First Group</Link>
               </Button>
@@ -65,7 +85,9 @@ export default function Dashboard() {
           <Card className="p-6">
             <h2 className="text-lg font-semibold mb-4">Upcoming Sessions</h2>
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">No upcoming sessions.</p>
+              <p className="text-sm text-muted-foreground">
+                No upcoming sessions.
+              </p>
               <Button variant="outline" asChild>
                 <Link href="/sessions">Schedule a Session</Link>
               </Button>
@@ -73,7 +95,7 @@ export default function Dashboard() {
           </Card>
         </div>
       </div>
-      
+
       <FooterLarge />
     </div>
   );

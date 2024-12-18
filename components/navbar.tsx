@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useAuth } from "@/components/providers/auth-provider";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { useAuth } from '@/components/providers/auth-provider';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import Link from 'next/link';
+import { GraduationCap } from 'lucide-react';
 
 export function Navbar() {
   const { user } = useAuth();
@@ -15,12 +15,12 @@ export function Navbar() {
     try {
       await signOut(auth);
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error('Error signing out:', error);
     }
   };
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex fixed w-full z-100">
+    <nav className="fixed flex items-center justify-center top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center px-4">
         <Link href="/" className="flex items-center space-x-2">
           <GraduationCap className="h-6 w-6" />

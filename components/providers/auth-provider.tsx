@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { createContext, useContext, useState, useEffect } from "react";
+import { User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
 
 interface AuthContextType {
   user: User | null;
@@ -26,22 +27,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
-      
-      // Redirect logic
-      if (user) {
-        const currentPath = window.location.pathname;
-        if (currentPath === '/sign-in' || currentPath === '/sign-up') {
-          router.push('/dashboard');
-        }
-      }
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
-      {children}
+      {loading ? null : children}
     </AuthContext.Provider>
   );
 }

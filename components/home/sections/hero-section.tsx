@@ -1,14 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { GraduationCap, Users, Video, BookOpen } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
+import { PageContainer } from '@/components/layout/page-container';
 
 export function HeroSection() {
   return (
     <section className="relative py-20 overflow-hidden bg-background">
-      <div className="container px-4 mx-auto">
+      <PageContainer>
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -53,7 +55,7 @@ export function HeroSection() {
             </div>
           </motion.div>
         </div>
-      </div>
+      </PageContainer>
     </section>
   );
 }

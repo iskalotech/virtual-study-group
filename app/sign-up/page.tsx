@@ -28,8 +28,28 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const idToken = await userCredential.user.getIdToken(); // Retrieve the Firebase ID token
+
+      // Send ID token to your backend API to set the cookie
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (response.ok) {
+        router.push("/dashboard");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to authenticate");
+      }
     } catch (error: any) {
       console.error("Sign-up error:", error);
       toast({
@@ -45,8 +65,24 @@ export default function SignUp() {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      const userCredential = await signInWithPopup(auth, provider);
+      const idToken = await userCredential.user.getIdToken();
+
+      // Send ID token to your backend API to set the cookie
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (response.ok) {
+        router.push("/dashboard");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to authenticate");
+      }
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       toast({
